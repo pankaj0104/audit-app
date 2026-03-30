@@ -382,4 +382,123 @@ export default function App() {
             <h3 style={{ marginTop: 0 }}>Update Report</h3>
             <div style={{ maxHeight: 260, overflow: "auto", border: "1px solid #e5e7eb", borderRadius: 12 }}>
               <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
-                <thead style={{ background: "#f9fafb"
+                <thead style={{ background: "#f9fafb" }}>
+                  <tr>
+                    <th style={{ padding: 10, textAlign: "left" }}>Sheet</th>
+                    <th style={{ padding: 10, textAlign: "left" }}>Row</th>
+                    <th style={{ padding: 10, textAlign: "left" }}>Field</th>
+                    <th style={{ padding: 10, textAlign: "left" }}>From</th>
+                    <th style={{ padding: 10, textAlign: "left" }}>To</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(analysis?.changeReport || []).length ? analysis.changeReport.map((item, idx) => (
+                    <tr key={idx} style={{ borderTop: "1px solid #e5e7eb" }}>
+                      <td style={{ padding: 10 }}>{item.sheet}</td>
+                      <td style={{ padding: 10 }}>{item.rowNumber}</td>
+                      <td style={{ padding: 10 }}>{item.field}</td>
+                      <td style={{ padding: 10 }}>{item.from}</td>
+                      <td style={{ padding: 10 }}>{item.to}</td>
+                    </tr>
+                  )) : (
+                    <tr><td style={{ padding: 10 }} colSpan={5}>No updates detected yet.</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div style={cardStyle()}>
+            <h3 style={{ marginTop: 0 }}>Timeline Search</h3>
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 12 }}>
+              <input
+                value={searchCode}
+                onChange={(e) => setSearchCode(e.target.value)}
+                placeholder="Enter ESS code / employee code"
+                style={{ flex: 1, minWidth: 220, height: 42, borderRadius: 12, border: "1px solid #d1d5db", padding: "0 12px" }}
+              />
+              <button style={buttonStyle(true)} onClick={searchTimeline}>Search Timeline</button>
+            </div>
+
+            <div style={{ maxHeight: 260, overflow: "auto", border: "1px solid #e5e7eb", borderRadius: 12 }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+                <thead style={{ background: "#f9fafb" }}>
+                  <tr>
+                    <th style={{ padding: 10, textAlign: "left" }}>Month</th>
+                    <th style={{ padding: 10, textAlign: "left" }}>Gross</th>
+                    <th style={{ padding: 10, textAlign: "left" }}>Net</th>
+                    <th style={{ padding: 10, textAlign: "left" }}>PT</th>
+                    <th style={{ padding: 10, textAlign: "left" }}>Sheet</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {timeline.length ? timeline.map((item, idx) => (
+                    <tr key={idx} style={{ borderTop: "1px solid #e5e7eb" }}>
+                      <td style={{ padding: 10 }}>{item.month}</td>
+                      <td style={{ padding: 10 }}>{item.gross}</td>
+                      <td style={{ padding: 10 }}>{item.net}</td>
+                      <td style={{ padding: 10 }}>{item.pt}</td>
+                      <td style={{ padding: 10 }}>{item.sheet}</td>
+                    </tr>
+                  )) : (
+                    <tr><td style={{ padding: 10 }} colSpan={5}>No timeline data yet.</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div style={cardStyle()}>
+          <h3 style={{ marginTop: 0 }}>Workbook Preview</h3>
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 12 }}>
+            <select
+              value={activeSheet?.name || ""}
+              onChange={(e) => setSelectedSheet(e.target.value)}
+              style={{ height: 42, borderRadius: 12, border: "1px solid #d1d5db", padding: "0 12px", minWidth: 180 }}
+            >
+              <option value="">Select sheet</option>
+              {(analysis?.sheets || []).map((sheet) => (
+                <option key={sheet.name} value={sheet.name}>{sheet.name}</option>
+              ))}
+            </select>
+
+            <input
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              placeholder="Search in sheet"
+              style={{ flex: 1, minWidth: 220, height: 42, borderRadius: 12, border: "1px solid #d1d5db", padding: "0 12px" }}
+            />
+          </div>
+
+          {!activeSheet ? (
+            <div style={{ color: "#6b7280" }}>Run audit to preview workbook.</div>
+          ) : (
+            <div style={{ overflow: "auto", border: "1px solid #e5e7eb", borderRadius: 12, background: "#fff" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+                <thead style={{ background: "#f9fafb" }}>
+                  <tr>
+                    {activeSheet.headers.map((header, idx) => (
+                      <th key={idx} style={{ padding: 10, textAlign: "left", whiteSpace: "nowrap" }}>{header}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {visibleRows.length ? visibleRows.map((row, ridx) => (
+                    <tr key={ridx} style={{ borderTop: "1px solid #e5e7eb" }}>
+                      {activeSheet.headers.map((_, cidx) => (
+                        <td key={cidx} style={{ padding: 10, verticalAlign: "top" }}>{String(row[cidx] ?? "")}</td>
+                      ))}
+                    </tr>
+                  )) : (
+                    <tr><td style={{ padding: 10 }} colSpan={activeSheet.headers.length}>No matching rows found.</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
