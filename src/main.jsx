@@ -1,8 +1,9 @@
-export default function App() {
-  return (
-    <div style={{ padding: 20, fontFamily: "Arial, sans-serif", background: "#111827", minHeight: "100vh", color: "white" }}>
-      <h1>NEW DASHBOARD BUILD LOADED 🚀</h1>
-      <p>Agar ye dikh raha hai to ab sahi file build ho rahi hai.</p>
-    </div>
-  );
-}
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.jsx'
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+)
